@@ -11,27 +11,107 @@
         </style>
 </head>
 <body>
-    <nav>
-        <ul>
-            <p>Todas las criaturas</p>
-            <p>buscador</p>
-        </ul>
-    </nav>
     <div id="inicio">
         <h1>GUÍA CRIATURAS</h1>
+        
         <h2>DISNEY DREAMLIGHT VALLEY</h2>
+        <div class="logo-container">
+            <h5>hecha por <img class="logo" src="hd-youtube-logo-png-transparent-background-20.png" alt="logoyt"><a href="https://www.youtube.com/@Liyona">Liyona</a></h5>
+        </div>
     </div>
     <section id="disponibles-ahora"> 
         <h3>Disponibles ahora</h3>
+        
+  <ul class="gallery" id="lista-criaturas">
+    <li>Cargando datos...</li>
+  </ul>
+
+  <script>
+    async function cargarCriaturas() {
+      const respuesta = await fetch('criaturas.json');
+      const criaturas = await respuesta.json();
+      return criaturas;
+    }
+
+    function obtenerDiaActual() {
+      const dias = ["domingo", "lunes", "martes", "miercoles", "jueves", "viernes", "sabado"];
+      const ahora = new Date();
+      return dias[ahora.getDay()];
+    }
+
+    function obtenerMinutosActuales() {
+      const ahora = new Date();
+      return ahora.getHours() * 60 + ahora.getMinutes();
+    }
+
+    function estaActivaAhora(criatura, diaActual, minutosActuales) {
+      const horarios = criatura.apariciones[diaActual];
+      if (!horarios) return false;
+
+      return horarios.some(horario => {
+        const [inicio, fin] = horario.split("-");
+        const [hIni, mIni] = inicio.split(":").map(Number);
+        const [hFin, mFin] = fin.split(":").map(Number);
+        const minInicio = hIni * 60 + mIni;
+        const minFin = hFin * 60 + mFin;
+
+        return minutosActuales >= minInicio && minutosActuales <= minFin;
+      });
+    }
+
+    async function mostrarActivas() {
+      const criaturas = await cargarCriaturas();
+      const lista = document.getElementById("lista-criaturas");
+      lista.innerHTML = "";
+
+      const diaActual = obtenerDiaActual();
+      const minutosActuales = obtenerMinutosActuales();
+
+      const activas = criaturas.filter(c => estaActivaAhora(c, diaActual, minutosActuales));
+
+      if (activas.length === 0) {
+        lista.innerHTML = "<li>No hay criaturas activas ahora.</li>";
+      } else {
+        activas.forEach(c => {
+  const div = document.createElement("div");
+  div.className = "criatura";
+
+  // Convertir nombre a slug para el nombre de archivo
+  const slug = c.nombre
+    .toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // elimina acentos
+    .replace(/[^a-z0-9 ]/g, "") // elimina símbolos
+    .replace(/\s+/g, "-"); // reemplaza espacios por guiones
+
+  const img = document.createElement("img");
+  img.src = `imagenes/${slug}.png`;
+  img.alt = c.nombre;
+
+  const p = document.createElement("p");
+  p.textContent = c.nombre;
+
+  div.appendChild(img);
+  div.appendChild(p);
+  lista.appendChild(div);
+});
+
+      }
+    }
+
+    mostrarActivas();
+    setInterval(mostrarActivas, 60000); // actualiza cada minuto
+    </script>
+
     </section>
     <section id="todas">
         <h3>⬇️ Todas las criaturas ⬇️</h3>
         <section id="Ardillas">
-            <h4>Ardillas</h4>
+            <details>
+            <summary><h4>Ardillas</h4></summary>
             <p>Todas se encuentran en la <strong>plaza</strong></p>
-            <p>Cómo alimentarlas: </p>
-            <p>❤️Comida favorita</p>
-            <p>&#128076; Comida buena</p>
+            <p>Cómo alimentarlas: Simplemente acércate, no hay truco.</p>
+            <p>❤️Comida favorita: Cacahuetes</p>
+            <p>&#128076; Comida buena: Fruta de arbustos y árboles</p>
             <div class="gallery">
                     <div class="criaturas">
                     <img src="White_Squirrel.png" alt="ardilla-blanca">
@@ -42,45 +122,47 @@
                 <div class="criaturas">
                     <img src="Red_Squirrel.png" alt="ardilla-roja">
                     <p><strong>Ardilla Roja</strong></p>
-                    <p>&#x1F552;Aparición - Lunes todo el día / Miercoles todo el día / Viernes todo el día / Domingo 00:00 a 12:00</p>
+                    <p>&#x1F552;Aparición - Lunes , Miércoles, Viernes todo el día / Domingo 00:00 a 12:00</p>
                 </div>
                 
                 <div class="criaturas">
                     <img src="Gray_Squirrel.png" alt="ardilla-gris">
                     <p><strong>Ardilla Gris</strong></p>
-                    <p>&#x1F552;Aparición - Martes todo el día / Miercoles todo el día / Sabado todo el día / Domingo 12:00 a 00:00</p>
+                    <p>&#x1F552;Aparición - Martes, Miércoles, Sábado todo el día / Domingo 12:00 a 00:00</p>
                 </div>
                 
                 <div class="criaturas">
                     <img src="Classic_Squirrel.png" alt="ardilla-clásica">
                     <p><strong>Ardilla Clásica</strong></p>
-                    <p>&#x1F552;Aparición - Lunes todo el día / Jueves todo el día / Sabado todo el día / Domingo 12:00 a 00:00</p>
+                    <p>&#x1F552;Aparición - Lunes, Jueves, Sábado todo el día / Domingo 12:00 a 00:00</p>
                 </div>
                 
                 <div class="criaturas">
                     <img src="Black_Squirrel.png" alt="ardilla-negra">
                     <p><strong>Ardilla Negra</strong></p>
-                    <p>&#x1F552;Aparición - Martes todo el día / Jueves todo el día / Viernes todo el día / Domingo 00:00 a 12:00</p>
+                    <p>&#x1F552;Aparición - Martes, Jueves, Viernes todo el día / Domingo 00:00 a 12:00</p>
                 </div>
                 </div>
+                </details>
         </section>
         <section id="Conejos">
-            <h4>Conejos</h4>
+            <details>
+            <summary><h4>Conejos</h4></summary>
             <p>Todos se encuentran en la <strong>Pradera pacífica</strong></p>
-            <p>Cómo alimentarlas: </p>
-            <p>❤️ Comida favorita</p>
-            <p>&#128076; Comida buena</p>
+            <p>Cómo alimentarlos: Perseguirlos varias veces hasta que puedas acercarte a ellos. Huirán de ti varias veces para que vayas detrás hasta conseguirlo.</p>
+            <p>❤️ Comida favorita: Zanahoria</p>
+            <p>&#128076; Comida buena: Cereales, especias, hortalizas y fruta que crece de semillas. </p>
             <div class="gallery">
                 <div class="criaturas">
                     <img src="White_Rabbit.png" alt="conejo-blanco">
                     <p><strong>Conejo Blanco</strong></p>
-                    <p>&#x1F552;Aparición - Martes todo el día / Jueves todo el día / Viernes todo el día / Domingo 00:00 a 12:00</p>
+                    <p>&#x1F552;Aparición - Martes, Jueves, Viernes todo el día / Domingo 00:00 a 12:00</p>
                 </div>
                 
                 <div class="criaturas">
                     <img src="Classic_Rabbit.png" alt="conejo-clásico">
                     <p><strong>Conejo Clásico</strong></p>
-                    <p>&#x1F552;Aparición - Lunes todo el día / Jueves todo el día / Sabado todo el día / Domingo 12:00 a 00:00</p>
+                    <p>&#x1F552;Aparición - Lunes, Jueves, Sábado todo el día / Domingo 12:00 a 00:00</p>
                 </div>
                 
                 <div class="criaturas">
@@ -92,116 +174,120 @@
                 <div class="criaturas">
                     <img src="Brown_Rabbit.png" alt="conejo-marrón">
                     <p><strong>Conejo Marrón</strong></p>
-                    <p>&#x1F552;Aparición - Martes todo el día / Miercoles todo el día / Sabado todo el día / Domingo 12:00 a 00:00</p>
+                    <p>&#x1F552;Aparición - Martes, Miércoles, Sábado todo el día / Domingo 12:00 a 00:00</p>
                 </div>
                 
                 <div class="criaturas">
                     <img src="Black_Rabbit.png" alt="conejo-negro">
                     <p><strong>Conejo Negro</strong></p>
-                    <p>&#x1F552;Aparición - Lunes todo el día / Miercoles todo el día / Viernes todo el día / Domingo 00:00 a 12:00</p>
+                    <p>&#x1F552;Aparición - Lunes, Miércoles, Viernes todo el día / Domingo 00:00 a 12:00</p>
                 </div>
             </div>
+            </details>
         </section>
         <section id="Cocodrilos">
-            <h4>Cocodrilos</h4>
+            <details>
+            <summary><h4>Cocodrilos</h4></summary>
             <p>Todos se encuentran en el <strong>Claro de la confianza</strong></p>
-            <p>Cómo alimentarlos: </p>
-            <p>❤️ Comida favorita</p>
-            <p>&#128076; Comida buena</p>
+            <p>Cómo alimentarlos: Camina cuando tienen la cabeza baja, detente cuando estén alerta, hasta llegar a ellos y se pongan boca arriba.</p>
+            <p>❤️ Comida favorita: Langosta</p>
+            <p>&#128076; Comida buena: Pescado y marisco del Claro de la confianza.</p>
             <div class="gallery">
                 <div class="criaturas">
                     <img src="Pink_Crocodile.png" alt="cocodrilo-rosa">
                     <p><strong>Cocodrilo rosa</strong></p>
-                    <p>&#x1F552;Aparición - sábado de 6:00 a 12:.00</p>
+                    <p>&#x1F552;Aparición - Sábado de 6:00 a 12:.00</p>
                 </div>
                 <div class="criaturas">
                     <img src="White_Crocodile.png" alt="cocodrilo-blanco">
                     <p><strong>Cocodrilo blanco</strong></p>
-                    <p>&#x1F552;Aparición - domingo  de 18:00 a 00:00</p>
+                    <p>&#x1F552;Aparición - Domingo  de 18:00 a 00:00</p>
                 </div>
                 <div class="criaturas">
                     <img src="Blue_Crocodile.png" alt="cocodrilo-azul">
                     <p><strong>Cocodrilo azul</strong></p>
-                    <p>&#x1F552;Aparición - lunes, miércoles, y viernes todo el día. Domingo de 00:00 a 12:.00</p>
+                    <p>&#x1F552;Aparición - Lunes, Miércoles, y Viernes todo el día. Domingo de 00:00 a 12:.00</p>
                 </div>
                 <div class="criaturas">
                     <img src="Golden_Crocodile.png" alt="cocodrilo-dorado">
                     <p><strong>Cocodrilo dorado</strong></p>
-                    <p>&#x1F552;Aparición - martes, jueves y viernes todo el día. Domingo de 00:00 a 12:00</p>
+                    <p>&#x1F552;Aparición - Martes, Jueves y Viernes todo el día. Domingo de 00:00 a 12:00</p>
                 </div>
                 <div class="criaturas">
                     <img src="Red_Crocodile.png" alt="cocodrilo-rojo">
                     <p><strong>Cocodrilo rojo</strong></p>
-                    <p>&#x1F552;Aparición - martes, miercoles y jueves todo el día. Domingo de 12:00 a 00:00</p>
+                    <p>&#x1F552;Aparición - Martes, Miércoles y Jueves todo el día. Domingo de 12:00 a 00:00</p>
                 </div>
                 <div class="criaturas">
                     <img src="Classic_Crocodile.png" alt="cocodrilo-clasico">
                     <p><strong>Cocodrilo clásico</strong></p>
-                    <p>&#x1F552;Aparición - lunes, jueves y sábado todo el día. Domingo de 12:00 a 00:00</p>
+                    <p>&#x1F552;Aparición - Lunes, Jueves y Sábado todo el día. Domingo de 12:00 a 00:00</p>
                 </div>
-            </div>
+            </div></details>
         </section>
         <section id="Zorros">
-            <h4>Zorros</h4>
+            <details>
+            <summary><h4>Zorros</h4></summary>
             <p>Todos se encuentran en las <strong>Cumbres heladas</strong></p>
-            <p>Cómo alimentarlos: </p>
-            <p>❤️ Comida favorita</p>
-            <p>&#128076; Comida buena</p>
+            <p>Cómo alimentarlos: Perseguirlos varias veces hasta que puedas acercarte a ellos. Huirán de ti varias veces para que vayas detrás hasta conseguirlo.</p>
+            <p>❤️ Comida favorita: Esturión blanco</p>
+            <p>&#128076; Comida buena: Pescado y marisco de las Cumbres heladas</p>
             <div class="gallery">
                     <div class="criaturas">
                     <img src="White_Fox.png" alt="zorro-blanco">
                     <p><strong>Zorro Blanco</strong></p>
-                    <p>&#x1F552;Aparición - Lunes todo el día / Jueves todo el día / Sabado todo el día / Domingo 12:00 a 00:00</p>
+                    <p>&#x1F552;Aparición - Lunes, Jueves, Sábado todo el día / Domingo 12:00 a 00:00</p>
                 </div>
                 
                 <div class="criaturas">
                     <img src="Red_Fox.png" alt="zorro-rojo">
                     <p><strong>Zorro Rojo</strong></p>
-                    <p>&#x1F552;Aparición - Sabado 16:00 a 22:00</p>
+                    <p>&#x1F552;Aparición - Sábado 16:00 a 22:00</p>
                 </div>
                 
                 <div class="criaturas">
                     <img src="Classic_Fox.png" alt="zorro-clásico">
                     <p><strong>Zorro Clásico</strong></p>
-                    <p>&#x1F552;Aparición - Lunes todo el día / Miercoles todo el día / Viernes todo el día / Domingo 00:00 a 12:00</p>
+                    <p>&#x1F552;Aparición - Lunes, Miércoles, Viernes todo el día / Domingo 00:00 a 12:00</p>
                 </div>
                 
                 <div class="criaturas">
                     <img src="Blue_Fox.png" alt="zorro-azul">
                     <p><strong>Zorro Azul</strong></p>
-                    <p>&#x1F552;Aparición - Martes todo el día / Jueves todo el día / Viernes todo el día / Domingo 00:00 a 12:00</p>
+                    <p>&#x1F552;Aparición - Martes, Jueves, Viernes todo el día / Domingo 00:00 a 12:00</p>
                 </div>
                 
                 <div class="criaturas">
                     <img src="Black_Fox.png" alt="zorro-negro">
                     <p><strong>Zorro Negro</strong></p>
-                    <p>&#x1F552;Aparición - Martes todo el día / Miercoles todo el día / Sabado todo el día / Domingo 12:00 a 00:00</p>
+                    <p>&#x1F552;Aparición - Martes, Miércoles, Sábado todo el día / Domingo 12:00 a 00:00</p>
                 </div>
-            </div>
+            </div></details>
         </section>
         <section id="Cuervos">
-            <h4>Cuervos</h4>
+            <details>
+            <summary><h4>Cuervos</h4></summary>
             <p>Todos se encuentran en las <strong>Tierras olvidadas</strong></p>
-            <p>Cómo alimentarlos: </p>
-            <p>❤️ Comida favorita</p>
-            <p>&#128076; Comida buena</p>
+            <p>Cómo alimentarlos: Espera hasta que terminen de dar vueltas a tu alrededor. </p>
+            <p>❤️ Comida favorita: Platos de 5 estrellas</p>
+            <p>&#128076; Comida buena: Platos de 3 y 4 estrellas</p>
             <div class="gallery">
                 <div class="criaturas">
                     <img src="White_Raven.png" alt="cuervo-blanco">
                     <p><strong>Cuervo Blanco</strong></p>
-                    <p>&#x1F552;Aparición - Martes todo el día / Miercoles todo el día / Sabado todo el día / Domingo 12:00 a 00:00</p>
+                    <p>&#x1F552;Aparición - Martes, Miércoles, Sábado todo el día / Domingo 12:00 a 00:00</p>
                 </div>
                 
                 <div class="criaturas">
                     <img src="Red_Raven.png" alt="cuervo-rojo">
                     <p><strong>Cuervo Rojo</strong></p>
-                    <p>&#x1F552;Aparición - Lunes todo el día / Miercoles todo el día / Viernes todo el día / Domingo 00:00 a 12:00</p>
+                    <p>&#x1F552;Aparición - Lunes, Miércoles, Viernes todo el día / Domingo 00:00 a 12:00</p>
                 </div>
                 
                 <div class="criaturas">
                     <img src="Classic_Raven.png" alt="cuervo-clásico">
                     <p><strong>Cuervo Clásico</strong></p>
-                    <p>&#x1F552;Aparición - Lunes todo el día / Jueves todo el día / Sabado todo el día / Domingo 12:00 a 00:00</p>
+                    <p>&#x1F552;Aparición - Lunes, Jueves, Sábado todo el día / Domingo 12:00 a 00:00</p>
                 </div>
                 
                 <div class="criaturas">
@@ -213,66 +299,68 @@
                 <div class="criaturas">
                     <img src="Blue_Raven.png" alt="cuervo-azul">
                     <p><strong>Cuervo Azul</strong></p>
-                    <p>&#x1F552;Aparición - Martes todo el día / Jueves todo el día / Viernes todo el día / Domingo 00:00 a 12:00</p>
+                    <p>&#x1F552;Aparición - Martes, Jueves, Viernes todo el día / Domingo 00:00 a 12:00</p>
                 </div>
-                </div>
+                </div></details>
         </section>
         <section id="Mapaches">
-            <h4>Mapaches</h4>
+            <details>
+            <summary><h4>Mapaches</h4></summary>
             <p>Todos se encuentran en las <strong>Bosque de la valentía</strong></p>
-            <p>Cómo alimentarlos: </p>
-            <p>❤️ Comida favorita</p>
-            <p>&#128076; Comida buena</p>
+            <p>Cómo alimentarlos: Camina cuando tienen la cabeza baja, detente cuando estén alerta, hasta llegar a ellos.</p>
+            <p>❤️ Comida favorita: Arándanos</p>
+            <p>&#128076; Comida buena: Grosella, frambuesa y fresa</p>
             <div class="gallery">
                 
                 <div class="criaturas">
                     <img src="White_Raccoon.png" alt="mapache-blanco">
                     <p><strong>Mapache Blanco</strong></p>
-                    <p>&#x1F552;Aparición - Martes todo el día / Jueves todo el día / Viernes todo el día / Domingo 00:00 a 12:00</p>
+                    <p>&#x1F552;Aparición - Martes, Jueves, Viernes todo el día / Domingo 00:00 a 12:00</p>
                 </div>
                 
                 <div class="criaturas">
                     <img src="Red_Raccoon.png" alt="mapache-rojo">
                     <p><strong>Mapache Rojo</strong></p>
-                    <p>&#x1F552;Aparición - Lunes todo el día / Miercoles todo el día / Viernes todo el día / Domingo 00:00 a 12:00</p>
+                    <p>&#x1F552;Aparición - Lunes, Miércoles, Viernes todo el día / Domingo 00:00 a 12:00</p>
                 </div>
                 
                 <div class="criaturas">
                     <img src="Classic_Raccoon.png" alt="mapache-clásico">
                     <p><strong>Mapache Clásico</strong></p>
-                    <p>&#x1F552;Aparición - Lunes todo el día / Jueves todo el día / Sabado todo el día / Domingo 12:00 a 00:00</p>
+                    <p>&#x1F552;Aparición - Lunes, Jueves, Sábado todo el día / Domingo 12:00 a 00:00</p>
                 </div>
                 
                 <div class="criaturas">
                     <img src="Black_Raccoon.png" alt="mapache-azul">
                     <p><strong>Mapache Azul</strong></p>
-                    <p>&#x1F552;Aparición - Miercoles 16:00 a 22:00</p>
+                    <p>&#x1F552;Aparición - Miércoles 16:00 a 22:00</p>
                 </div>
                 
                 <div class="criaturas">
                     <img src="Black_Raccoon.png" alt="mapache-negro">
                     <p><strong>Mapache Negro</strong></p>
-                    <p>&#x1F552;Aparición - Martes todo el día / Miercoles todo el día / Sabado todo el día / Domingo 12:00 a 00:00</p>
+                    <p>&#x1F552;Aparición - Martes, Miércoles, Sábado todo el día / Domingo 12:00 a 00:00</p>
                 </div>
-            </div>
+            </div></details>
         </section>
         <section id="Suimangas">
-            <h4>Suimangas</h4>
+            <details>
+            <summary><h4>Suimangas</h4></summary>
             <p>Todos se encuentran en la <strong>Meseta soleada</strong></p>
-            <p>Cómo alimentarlos: </p>
-            <p>❤️ Comida favorita</p>
-            <p>&#128076; Comida buena</p>
+            <p>Cómo alimentarlos: Simplemente acércate, no hay truco. </p>
+            <p>❤️ Comida favorita: Flor de sus colores (dos cada uno)</p>
+            <p>&#128076; Comida buena: Cualquier flor</p>
             <div class="gallery">
                 <div class="criaturas">
                     <img src="Turquoise_Sunbird.png" alt="Suimanga-turquesa">
                     <p><strong>Suimanga Turquesa</strong></p>
-                    <p>&#x1F552;Aparición - Lunes todo el día / Miercoles todo el día / Viernes todo el día / Domingo 00:00 a 12:00</p>
+                    <p>&#x1F552;Aparición - Lunes, Miércoles, Viernes todo el día / Domingo 00:00 a 12:00</p>
                 </div>
                 
                 <div class="criaturas">
                     <img src="Red_Sunbird.png" alt="Suimanga-rojo">
                     <p><strong>Suimanga Rojo</strong></p>
-                    <p>&#x1F552;Aparición - Lunes todo el día / Jueves todo el día / Sabado todo el día / Domingo 12:00 a 00:00</p>
+                    <p>&#x1F552;Aparición - Lunes, Jueves, Sábado todo el día / Domingo 12:00 a 00:00</p>
                 </div>
                 
                 <div class="criaturas">
@@ -284,45 +372,46 @@
                 <div class="criaturas">
                     <img src="Golden_Sunbird.png" alt="Suimanga-dorado">
                     <p><strong>Suimanga Dorado</strong></p>
-                    <p>&#x1F552;Aparición - Martes todo el día / Jueves todo el día / Viernes todo el día / Domingo 00:00 a 12:00</p>
+                    <p>&#x1F552;Aparición - Martes, Jueves, Viernes todo el día / Domingo 00:00 a 12:00</p>
                 </div>
                 
                 <div class="criaturas">
                     <img src="Emerald_Sunbird.png" alt="Suimanga-esmeralda">
                     <p><strong>Suimanga Esmeralda</strong></p>
-                    <p>&#x1F552;Aparición - Martes todo el día / Miercoles todo el día / Sabado todo el día / Domingo 12:00 a 00:00</p>
+                    <p>&#x1F552;Aparición - Martes, Miércoles, Sábado todo el día / Domingo 12:00 a 00:00</p>
                 </div>
-            </div>
+            </div></details>
         </section>
         <section id="Tortugas">
-            <h4>Tortugas</h4>
+            <details>
+            <summary><h4>Tortugas</h4></summary>
             <p>Todos se encuentran en la <strong>Playa deslumbrante</strong></p>
-            <p>Cómo alimentarlos: </p>
-            <p>❤️ Comida favorita</p>
-            <p>&#128076; Comida buena</p>
+            <p>Cómo alimentarlos: Al acercarte, se esconden rápidamente asustadas, espera quietx a que salgan del caparazón.</p>
+            <p>❤️ Comida favorita: Algas</p>
+            <p>&#128076; Comida buena: Marisco</p>
             <div class="gallery">
                 <div class="criaturas">
                     <img src="White_Sea_Turtle.png" alt="Tortuga-marina-blanca">
                     <p><strong>Tortuga Marina Blanca</strong></p>
-                    <p>&#x1F552;Aparición - Martes todo el día / Miercoles todo el día / Sabado todo el día / Domingo 12:00 a 00:00</p>
+                    <p>&#x1F552;Aparición - Martes, Miércoles, Sábado todo el día / Domingo 12:00 a 00:00</p>
                 </div>
                 
                 <div class="criaturas">
                     <img src="Purple_Sea_Turtle.png" alt="Tortuga-marina-púrpura">
                     <p><strong>Tortuga Marina Púrpura</strong></p>
-                    <p>&#x1F552;Aparición - Martes todo el día / Jueves todo el día / Viernes todo el día / Domingo 00:00 a 12:00</p>
+                    <p>&#x1F552;Aparición - Martes, Jueves, Viernes todo el día / Domingo 00:00 a 12:00</p>
                 </div>
                 
                 <div class="criaturas">
                     <img src="Classic_Sea_Turtle.png" alt="Tortuga-marina-clásica">
                     <p><strong>Tortuga Marina Clásica</strong></p>
-                    <p>&#x1F552;Aparición - Lunes todo el día / Jueves todo el día / Sabado todo el día / Domingo 12:00 a 00:00</p>
+                    <p>&#x1F552;Aparición - Lunes, Jueves, Sábado todo el día / Domingo 12:00 a 00:00</p>
                 </div>
                 
                 <div class="criaturas">
                     <img src="Brown_Sea_Turtle.png" alt="Tortuga-marina-marrón">
                     <p><strong>Tortuga Marina Marrón</strong></p>
-                    <p>&#x1F552;Aparición - Lunes todo el día / Miercoles todo el día / Viernes todo el día / Domingo 00:00 a 12:00</p>
+                    <p>&#x1F552;Aparición - Lunes, Miércoles, Viernes todo el día / Domingo 00:00 a 12:00</p>
                 </div>
                 
                 <div class="criaturas">
@@ -330,99 +419,93 @@
                     <p><strong>Tortuga Marina Negra</strong></p>
                     <p>&#x1F552;Aparición - Lunes 10:00 a 16:00</p>
                 </div>
-            </div>
+            </div></details>
         </section>
         <h2>Primer DLC a Rift in time : Isla eternidad</h2>
         <section id="Capibaras">
-            <h4>Capibaras</h4>
+            <details>
+            <summary><h4>Capibaras</h4></summary>
             <p>Todos se encuentran en el <strong>Selva salvaje</strong></p>
-            <p>Cómo alimentarlos: </p>
-            <p>❤️ Comida favorita</p>
-            <p>&#128076; Comida buena</p>
+            <p>Cómo alimentarlas: simplemente acércate, no hay truco</p>
+            <p>❤️ Comida favorita: Repollo</p>
+            <p>&#128076; Comida buena: Cereales, especias, hortalizas y fruta que crece de semillas </p>
             <div class="gallery">
                 <div class="criaturas">
                     <img src="Black_and_White_Capybara.png" alt="capibara-negra-y-blanca">
                     <p><strong>Capibara Negra y Blanca</strong></p>
-                    <p>&#x1F552;Aparición - Martes todo el día / Jueves todo el día / Viernes 12:00 a 00:00 / Sabado 12:00 a 00:00 /
+                    <p>&#x1F552;Aparición - Martes, Jueves todo el día / Viernes 12:00 a 00:00 / Sábado 12:00 a 00:00 /
                         Domingo 12:00 a 00:00</p>
                 </div>
                 
                 <div class="criaturas">
                     <img src="Red_and_White_Striped_Capybara.png" alt="capibara-rayada-roja-y-blanca">
                     <p><strong>Capibara Rayada Roja y Blanca</strong></p>
-                    <p>&#x1F552;Aparición - Sabado 12:00 a 18:00</p>
+                    <p>&#x1F552;Aparición - Sábado 12:00 a 18:00</p>
                 </div>
                 
                 <div class="criaturas">
                     <img src="Gray_Spotted_Capybara.png" alt="capibara-manchada-gris">
                     <p><strong>Capibara Manchada Gris</strong></p>
-                    <p>&#x1F552;Aparición - Lunes 12:00 a 00:00 / Martes 12:00 a 00:00 / Miercoles 12:00 a 00:00 / Viernes todo el día /
-                        Domingo todo el día</p>
+                    <p>&#x1F552;Aparición - Lunes, Martes y Miércoles 12:00 a 00:00 / Viernes y Domingo todo el día</p>
                 </div>
                 
                 <div class="criaturas">
                     <img src="Toon_Capybara.png" alt="capibara-toon">
                     <p><strong>Capibara toon</strong></p>
-                    <p>&#x1F552;Aparición - Lunes todo el día / Martes todo el día / Miercoles todo el día / Jueves todo el día /
-                        Viernes todo el día / Sabado todo el día / Domingo todo el día</p>
+                    <p>&#x1F552;Aparición - Lunes, Martes, Miércoles, Jueves,
+                        Viernes, Sábado y Domingo todo el día</p>
                 </div>
                 
                 <div class="criaturas">
                     <img src="Blue_Striped_Capybara.png" alt="capibara-rayada-azul">
                     <p><strong>Capibara Rayada Azul</strong></p>
-                    <p>&#x1F552;Aparición - Lunes 00:00 a 12:00 / Martes 00:00 a 12:00 / Miercoles 00:00 a 12:00 / Jueves todo el día /
-                        Sabado todo el día</p>
+                    <p>&#x1F552;Aparición - Lunes, Martes, Miércoles de 00:00 a 12:00 / Jueves y Sábado todo el día</p>
                 </div>
                 
                 <div class="criaturas">
                     <img src="Classic_Capybara.png" alt="capibara-clásica">
                     <p><strong>Capibara Clásica</strong></p>
-                    <p>&#x1F552;Aparición - Lunes todo el día / Martes todo el día / Miercoles todo el día / Jueves todo el día /
-                        Viernes todo el día / Sabado todo el día / Domingo todo el día</p>
+                    <p>&#x1F552;Aparición - Lunes, Martes, Miércoles, Jueves, Viernes, Sábado y Domingo todo el día</p>
                 </div>
-            </div>
+            </div></details>
         </section>
         <section id="Cobras">
-            <h4>Cobras</h4>
-            <p>Todos se encuentran en las <strong>Dunas brillantes</strong></p>
-            <p>Cómo alimentarlos: </p>
-            <p>❤️ Comida favorita</p>
-            <p>&#128076; Comida buena</p>
+            <details>
+            <summary><h4>Cobras</h4></summary>
+            <p>Todas se encuentran en las <strong>Dunas brillantes</strong></p>
+            <p>Cómo alimentarlas: Acércate cuando estén relajadas, detente cuando estén alerta hasta llegar a ellas. </p>
+            <p>❤️ Comida favorita: Huevos</p>
+            <p>&#128076; Comida buena: Productos en la sección de lácteos</p>
             <div class="gallery">
                 
                 <div class="criaturas">
                     <img src="Toon_Cobra.png" alt="cobra-dibujo animado">
                     <p><strong>Cobra dibujo animado</strong></p>
-                    <p>&#x1F552;Aparición - Lunes todo el día / Martes todo el día / Miercoles todo el día / Jueves todo el día /
-                        Viernes todo el día / Sabado todo el día / Domingo todo el día</p>
+                    <p>&#x1F552;Aparición - Lunes, Martes, Miércoles, Jueves, Viernes, Sábado y Domingo todo el día</p>
                 </div>
                 
                 <div class="criaturas">
                     <img src="Blue_and_Red_Striped_Cobra.png" alt="cobra-rayada-azul-y-roja">
                     <p><strong>Cobra Rayada Azul y Roja</strong></p>
-                    <p>&#x1F552;Aparición - Lunes 12:00 a 00:00 / Martes 12:00 a 00:00 / Jueves todo el día / Sabado 12:00 a 00:00 /
-                        Domingo todo el día</p>
+                    <p>&#x1F552;Aparición - Lunes, Martes, y Sábado de 12:00 a 00:00 / Jueves y Domingo todo el día</p>
                 </div>
                 
                 <div class="criaturas">
                     <img src="Classic_Cobra.png" alt="cobra-clásica">
                     <p><strong>Cobra Clásica</strong></p>
-                    <p>&#x1F552;Aparición - Lunes todo el día / Martes todo el día / Miercoles todo el día / Jueves todo el día /
-                        Viernes todo el día / Sabado todo el día / Domingo todo el día</p>
+                    <p>&#x1F552;Aparición - Lunes, Martes, Miércoles, Jueves, Viernes, Sábado y Domingo todo el día</p>
                 </div>
                 
                 <div class="criaturas">
                     <img src="Pink_Spotted_Cobra.png" alt="cobra-manchada-rosa">
                     <p><strong>Cobra Manchada Rosa</strong></p>
-                    <p>&#x1F552;Aparición - Lunes todo el día / Miercoles 00:00 a 12:00 / Jueves 00:00 a 12:00 / Viernes todo el día /
-                        Domingo 00:00 a 12:00</p>
+                    <p>&#x1F552;Aparición - Lunes y Viernes todo el día / Miércoles, Jueves y Domingo 00:00 a 12:00</p>
                 </div>
                 
                 <div class="criaturas">
                     <img src="Yellow_and_Purple_Striped_Cobra.png" alt="cobra-rayada-amarilla-y-púrpura">
                     <p><strong>Cobra Rayada Amarilla y Púrpura</strong></p>
-                    <p>&#x1F552;Aparición - Martes todo el día / Miercoles 12:00 a 00:00 / Jueves 12:00 a 00:00 / Sabado todo el día /
-                        Domingo 12:00 a 00:00</p>
+                    <p>&#x1F552;Aparición - Martes y Sábado todo el día / Miércoles, Jueves y Domingo 12:00 a 00:00</p>
                 </div>
                 
                 <div class="criaturas">
@@ -430,14 +513,15 @@
                     <p><strong>Cobra Rayada Verde y Blanca</strong></p>
                     <p>&#x1F552;Aparición - Jueves 6:00 a 12:00</p>
                 </div>
-            </div>
+            </div></details>
         </section>
         <section id="Monos">
-            <h4>Monos</h4>
+            <details>
+            <summary><h4>Monos</h4></summary>
             <p>Todos se encuentran en el <strong>Puerto de los ancestros</strong></p>
-            <p>Cómo alimentarlos: </p>
-            <p>❤️ Comida favorita</p>
-            <p>&#128076; Comida buena</p>
+            <p>Cómo alimentarlos: Perseguirlos varias veces hasta que puedas acercarte a ellos. Huirán de ti varias veces para que vayas detrás hasta conseguirlo.</p>
+            <p>❤️ Comida favorita: Postres de 5 estrellas</p>
+            <p>&#128076; Comida buena: Comida de 3 estrellas o superior</p>
             <div class="gallery">
                 <div class="criaturas">
                     <img src="Black_and_Gray_Monkey.png" alt="mono-negro-y-gris">
@@ -448,148 +532,138 @@
                 <div class="criaturas">
                     <img src="Beige_Monkey.png" alt="mono-beige">
                     <p><strong>Mono Beige</strong></p>
-                    <p>&#x1F552;Aparición - Lunes 12:00 a 00:00 / Miercoles 12:00 a 00:00 / Jueves todo el día / Viernes 12:00 a 00:00 /
-                        Domingo todo el día</p>
+                    <p>&#x1F552;Aparición - Lunes, Miércoles y Viernes 12:00 a 00:00 / Jueves y Domingo todo el día</p>
                 </div>
-                
                 <div class="criaturas">
                     <img src="Red_and_Beige_Monkey.png" alt="mono-rojo-y-beige">
                     <p><strong>Mono Rojo y Beige</strong></p>
-                    <p>&#x1F552;Aparición - Lunes 00:00 a 12:00 / Martes todo el día / Miercoles 00:00 a 12:00 / Viernes 00:00 a 12:00 /
-                        Sabado todo el día</p>
+                    <p>&#x1F552;Aparición - Lunes, Miércoles y Viernes de 00:00 a 12:00 / Martes y Sábado todo el día</p>
                 </div>
-                
                 <div class="criaturas">
                     <img src="Toon_Monkey.png" alt="mono-dibujo animado">
                     <p><strong>Mono dibujo animado</strong></p>
-                    <p>&#x1F552;Aparición - Lunes todo el día / Martes todo el día / Miercoles todo el día / Jueves todo el día /
-                        Viernes todo el día / Sabado todo el día / Domingo todo el día</p>
+                    <p>&#x1F552;Aparición - Lunes, Martes, Miércoles, Jueves, Viernes, Sábado, Domingo todo el día</p>
                 </div>
                 
                 <div class="criaturas">
                     <img src="Classic_Monkey.png" alt="mono-clásico">
                     <p><strong>Mono Clásico</strong></p>
-                    <p>&#x1F552;Aparición - Lunes todo el día / Martes todo el día / Miercoles todo el día / Jueves todo el día /
-                        Viernes todo el día / Sabado todo el día / Domingo todo el día</p>
+                    <p>&#x1F552;Aparición - Lunes, Martes, Miércoles, Jueves, Viernes, Sábado, Domingo todo el día</p>
                 </div>
                 
                 <div class="criaturas">
                     <img src="Black_and_Brown_Monkey.png" alt="mono-negro-y-marrón">
                     <p><strong>Mono Negro y Marrón</strong></p>
-                    <p>&#x1F552;Aparición - Martes 12:00 a 00:00 / Miercoles todo el día / Jueves 12:00 a 00:00 / Sabado todo el día /
-                        Domingo 12:00 a 00:00</p>
+                    <p>&#x1F552;Aparición - Martes, Jueves y Domingo de 12:00 a 00:00 / Miércoles y Sábado todo el día</p>
                 </div>
-            </div>
+            </div></details>
         </section>
         <h2>Segundo DLC Storybook vale : La vaguada de los cuentos</h2>
         <section id="Búhos">
-            <h4>Búhos</h4>
+            <details>
+            <summary><h4>Búhos</h4></summary>
             <p>Todos se encuentran en <strong>El nexo</strong></p>
-            <p>Cómo alimentarlos: </p>
-            <p>❤️ Comida favorita</p>
-            <p>&#128076; Comida buena</p>
+            <p>Cómo alimentarlos: Simplemente acércate, no hay truco </p>
+            <p>❤️ Comida favorita: Cebada</p>
+            <p>&#128076; Comida buena: Cereales</p>
             <div class="gallery">
                 <div class="criaturas">
                     <img src="Dark_Owl.png" alt="búho-oscuro">
                     <p><strong>Búho Oscuro</strong></p>
-                    <p>&#x1F552;Aparición - Sabado todo el día / Domingo todo el día</p>
+                    <p>&#x1F552;Aparición - Sábado y Domingo todo el día</p>
                 </div>
                 
                 <div class="criaturas">
                     <img src="Brown_Owl.png" alt="búho-marrón">
                     <p><strong>Búho Marrón</strong></p>
-                    <p>&#x1F552;Aparición - Lunes todo el día / Martes todo el día / Miercoles todo el día / Jueves todo el día /
-                        Viernes todo el día</p>
+                    <p>&#x1F552;Aparición - Lunes, Martes, Miércoles, Jueves y Viernes todo el día</p>
                 </div>
                 
                 <div class="criaturas">
                     <img src="Purple_Owl.png" alt="búho-púrpura">
                     <p><strong>Búho Púrpura</strong></p>
-                    <p>&#x1F552;Aparición - Lunes 00:00 a 9:00 / Martes 00:00 a 9:00 / Miercoles 00:00 a 9:00 / Jueves 00:00 a 9:00 /
-                        Viernes 00:00 a 9:00 / Sabado 00:00 a 9:00 / Domingo 00:00 a 9:00</p>
+                    <p>&#x1F552;Aparición - Lunes, Martes, Miércoles, Jueves, Viernes, Sábado y Domingo 00:00 a 9:00</p>
                 </div>
-                
                 <div class="criaturas">
                     <img src="Light_Owl.png" alt="búho-claro">
                     <p><strong>Búho Claro</strong></p>
-                    <p>&#x1F552;Aparición - Lunes 15:00 a 20:00 / Martes 15:00 a 20:00 / Miercoles 15:00 a 20:00 / Jueves 15:00 a 20:00
-                        / Viernes 15:00 a 20:00 / Sabado 15:00 a 20:00 / Domingo 15:00 a 20:00</p>
+                    <p>&#x1F552;Aparición - Lunes, Martes, Miércoles, Jueves, Viernes, Sábado y Domingo 15:00 a 20:00</p>
                 </div>
-            </div>
+            </div></details>
         </section>
         <section id="Pegasos">
-            <h4>Pegasos</h4>
+            <details>
+            <summary><h4>Pegasos</h4></summary>
             <p>Todos se encuentran en <strong>Mitopía</strong></p>
-            <p>Cómo alimentarlos: </p>
-            <p>❤️ Comida favorita</p>
-            <p>&#128076; Comida buena</p>
+            <p>Cómo alimentarlos: Perseguirlos varias veces hasta que puedas acercarte a ellos. Huirán de ti varias veces para que vayas detrás hasta conseguirlo.</p>
+            <p>❤️ Comida favorita: Comida 4 y 5 estrellas vegetariana</p>
+            <p>&#128076; Comida buena: Comida 3 estrellas vegetariana</p>
             <div class="gallery">
                 
                 <div class="criaturas">
                     <img src="Yellow_Pegasus.png" alt="pegaso-amarillo">
                     <p><strong>Pegaso Amarillo</strong></p>
-                    <p>&#x1F552;Aparición - Martes 18:00 a 00:00 / Miercoles 18:00 a 00:00 / Jueves 18:00 a 00:00 / Viernes 18:00 a
-                        00:00 / Sabado 18:00 a 00:00</p>
+                    <p>&#x1F552;Aparición - Martes, Miércoles, Jueves, Viernes y Sábado 18:00 a 00:00</p>
                 </div>
                 
                 <div class="criaturas">
                     <img src="Blue_Pegasus.png" alt="pegaso-azul">
                     <p><strong>Pegaso Azul</strong></p>
-                    <p>&#x1F552;Aparición - Lunes todo el día / Martes todo el día / Miercoles todo el día</p>
+                    <p>&#x1F552;Aparición - Lunes, Martes y Miércoles todo el día</p>
                 </div>
                 
                 <div class="criaturas">
                     <img src="Pink_Pegasus.png" alt="pegaso-rosa">
                     <p><strong>Pegaso Rosa</strong></p>
-                    <p>&#x1F552;Aparición - Jueves todo el día / Viernes todo el día / Sabado todo el día / Domingo todo el día</p>
+                    <p>&#x1F552;Aparición - Jueves, Viernes, Sábado y Domingo todo el día</p>
                 </div>
                 
                 <div class="criaturas">
                     <img src="Peach_Pegasus.png" alt="pegaso-encarnado">
                     <p><strong>Pegaso encarnado</strong></p>
-                    <p>&#x1F552;Aparición - Lunes 6:00 a 14:00 / Martes 6:00 a 14:00 / Miercoles 6:00 a 14:00 / Jueves 6:00 a 14:00 /
-                        Viernes 6:00 a 14:00 / Sabado 6:00 a 14:00 / Domingo 6:00 a 14:00</p>
+                    <p>&#x1F552;Aparición - Lunes, Martes, Miércoles, Jueves, Viernes, Sábado y Domingo 6:00 a 14:00</p>
                 </div>
-            </div>
+            </div></details>
         </section>
         <section id="Dragones">
-            <h4>Dragones</h4>
+            <details>
+            <summary><h4>Dragones</h4></summary>
             <p>Todos se encuentran en <strong>Porsiemprejamás</strong></p>
-            <p>Cómo alimentarlos: </p>
-            <p>❤️ Comida favorita</p>
-            <p>&#128076; Comida buena</p>
+            <p>Cómo alimentarlos: Al acércarte se esconden, espérate quieto a que se les pase la timidez. </p>
+            <p>❤️ Comida favorita: Hielo puro y magma (tanto brillante como normal)</p>
+            <p>&#128076; Comida buena: Gemas</p>
             <div class="gallery">
                 <div class="criaturas">
                     <img src="Blue_Baby_Dragon.png" alt="dragón-bebé-azul">
                     <p><strong>Dragón Bebé Azul</strong></p>
-                    <p>&#x1F552;Aparición - Martes todo el día / Miercoles todo el día / Jueves todo el día / Viernes todo el día</p>
+                    <p>&#x1F552;Aparición - Martes, Miércoles, Jueves y Viernes todo el día</p>
                 </div>
                 
                 <div class="criaturas">
                     <img src="Green_Baby_Dragon.png" alt="dragón-bebé-verde">
                     <p><strong>Dragón Bebé Verde</strong></p>
-                    <p>&#x1F552;Aparición - Lunes 10:00 a 18:00 / Martes 10:00 a 18:00 / Miercoles 10:00 a 18:00 / Jueves 10:00 a 18:00
-                        / Domingo 10:00 a 18:00</p>
+                    <p>&#x1F552;Aparición - Lunes, Martes, Miércoles, Jueves y Domingo 10:00 a 18:00</p>
                 </div>
                 
                 <div class="criaturas">
                     <img src="Purple_Baby_Dragon.png" alt="dragón-bebé-púrpura">
                     <p><strong>Dragón Bebé Púrpura</strong></p>
-                    <p>&#x1F552;Aparición - Lunes 00:00 a 12:00 / Martes 00:00 a 12:00 / Miercoles 00:00 a 12:00 / Jueves 00:00 a 12:00
-                        / Viernes 00:00 a 12:00 / Sabado 00:00 a 12:00 / Domingo 00:00 a 12:00</p>
+                    <p>&#x1F552;Aparición - Lunes, Martes, Miércoles, Jueves, Viernes, Sábado y Domingo 00:00 a 12:00</p>
                 </div>
                 
                 <div class="criaturas">
                     <img src="Red_Baby_Dragon.png" alt="dragón-bebé-rojo">
                     <p><strong>Dragón Bebé Rojo</strong></p>
-                    <p>&#x1F552;Aparición - Sabado todo el día / Domingo todo el día</p>
+                    <p>&#x1F552;Aparición - Sábado y Domingo todo el día</p>
                 </div>
-            </div>
+            </div></details>
         </section>
     </section>
     <section id="creditos">
-        <p>mis enlaces</p>
+        <p>Información obtenida de la <a href="https://dreamlightvalleywiki.com/Critters">Wiki de Disney Dreamlight Valley</a></p>
+        <p>Mis redes: <a href="https://www.youtube.com/@Liyona">Youtube</a> <a href="https://www.twitch.tv/liyona__">Twitch</a> </p>
     </section>
    
+
 </body>
 </html>
