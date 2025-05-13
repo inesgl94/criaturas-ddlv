@@ -3,7 +3,7 @@ body {
 font-family: "Josefin Sans", sans-serif;
   margin: 0;
   padding-right: 0;
-  background-image: url('cielo.jpg'); /* Replace with your image URL */
+  background-image: url('beautiful-pastel-color-gradient-background-free-vector.jpg');
   background-size: cover; /* Ensures the image covers the entire screen */
   background-position: center; /* Centers the image */
   background-repeat:repeat-y; /* Repeats the image vertically */
@@ -23,7 +23,7 @@ h4 {
   position: relative;
   background-color: rgba(255, 183, 251, 0.4);
   padding: 10px;
-  color: #730f7c; /* Color del texto */
+  color: #730f7c; 
 }
 h3 {
   font-size: 1.8em;
@@ -51,7 +51,7 @@ h3 {
     position: relative;
     background-color: rgba(239, 227, 250, 0.4); /* Red with 50% opacity */
     padding: 10px;
-    color: #730f7c; /* Color del texto */
+    color: #730f7c; 
 }
 
 #inicio h2 {
