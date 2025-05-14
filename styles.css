@@ -101,11 +101,11 @@ h3 {
   details {
       margin-bottom: 10px;
     }
-    summary {
+  summary {
   display: inline;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
+  cursor: none;
   font-weight: bold;
   width: 100%;
 }
