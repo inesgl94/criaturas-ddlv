@@ -105,7 +105,7 @@ h3 {
   display: inline;
   align-items: center;
   justify-content: center;
-  cursor: none;
+  cursor: pointer;
   font-weight: bold;
   width: 100%;
 }
