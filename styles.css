@@ -85,6 +85,35 @@ h2 {
   display: block;
   transition: transform 0.3s ease;
 }
+
+#capibaras-div img {
+  width: 60%;
+  display: block;
+  align-items: center;
+  margin: 0 auto;
+  border-radius: 8px;
+  height: auto;
+  transition: transform 0.3s ease;
+}
+
+#monos-div img {
+  width: 47%;
+  display: block;
+  align-items: center;
+  margin: 0 auto;
+  border-radius: 8px;
+  height: auto;
+  transition: transform 0.3s ease;
+}
+#buhos-div img {
+  width: 110%;
+  display: block;
+  align-items: center;
+  margin: 0 auto;
+  border-radius: 8px;
+  height: auto;
+  transition: transform 0.3s ease;
+}
 .gallery p {
   text-align: center;
   font-size: 14px;
