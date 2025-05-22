@@ -69,7 +69,6 @@ h2 {
 }
 
 #inventario-ideal div {
-  overflow: hidden;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   background-color: rgba(239, 227, 250, 0.6);
@@ -83,6 +82,8 @@ h2 {
   height: auto;
   display: block;
   transition: transform 0.3s ease;
+  margin-top: 10px;
+
 }
 #inventario-ideal p {
   text-align: center;
