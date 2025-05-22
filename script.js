@@ -83,16 +83,6 @@ async function mostrarActivas() {
       const img = document.createElement("img");
       img.src = `imagenes/${slug}.png`;
       img.alt = c.nombre;
-// Si el nombre de la criatura incluye "Mono", ajustamos el tamaño
-if (criatura.nombre.includes("mono")) {
-  img.style.maxWidth = '100px';       // más pequeño que el resto
-  img.style.aspectRatio = '1 / 1';
-  img.style.objectFit = 'cover';
-} else {
-  img.style.maxWidth = '150px';       // tamaño estándar para otras criaturas
-  img.style.aspectRatio = '1 / 1';
-  img.style.objectFit = 'cover';
-}
 
       const p = document.createElement("p");
       p.textContent = c.nombre;
