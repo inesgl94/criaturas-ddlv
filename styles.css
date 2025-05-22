@@ -61,6 +61,39 @@ h2 {
   font-size: 1.5em;
 }
 
+#inventario-ideal {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+  padding: 10px;
+}
+
+#inventario-ideal div {
+  overflow: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: rgba(239, 227, 250, 0.6);
+}
+
+#inventario-ideal img {
+  width: 99%;
+  align-items: center;
+  margin: 0 auto;
+  border-radius: 8px;
+  height: auto;
+  display: block;
+  transition: transform 0.3s ease;
+}
+#inventario-ideal p {
+  text-align: center;
+  font-size: 18px;
+  margin: 5px 0;
+}
+
+#inventario-ideal img:hover {
+  transform: scale(1.1);
+}
+
 .gallery {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
